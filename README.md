@@ -1,4 +1,4 @@
-# OLX_test
+# React_test
 
 steps to run the project
 1) clone the project
