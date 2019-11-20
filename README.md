@@ -20,4 +20,4 @@ After all the edits click "SAVE" to save to the data. data will saved and retain
 
 # Request Page
 As this was simple display I didnt use the local storage or redux but the Filter for "denied", "approved" and "pending" is working using "useState"
-and clicking on fliters will update the data
+and clicking on fliters will update the data.
