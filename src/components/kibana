@@ -1,0 +1,28 @@
+var flattenObject = function (ob) {
+  var toReturn = {};
+  for (let i in ob) {
+    if (typeof ob[i] === "object" && ob[i]!== null ) {
+      var flatObject = flattenObject(ob[i]);
+      for (let x in flatObject) {
+        toReturn[i + "." + x] = flatObject[x];
+      }
+    } else {
+      toReturn[i] = ob[i];
+    }
+  }
+  return toReturn;
+};
+
+
+console.log(flattenObject({
+  "ticker": "AAPL",
+  "name": "Apple",
+  "data": [
+    1,2,3,4
+  ],
+  "obj": [
+    {"revenue": 1, "income": 11},
+    {"revenue": 2, "income": 22},
+  ],
+}
+));

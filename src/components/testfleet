@@ -1,0 +1,114 @@
+/**
+ * We have an array of objects that describes the contents of people's lunchboxes. The app
+ * we're working on is used to present this data to the user in useful ways. We need your help
+ * implementing some new requirements. Please implement each requirement in order, one at a time.
+ *
+ * ====>>> Please ask questions if you get stuck, especially on syntax! :) <<<======
+ *
+ *   1) Create a second list that phrases this information with the person's name first.
+ *      For example: "Michael has Apple".
+ *
+ *   2) Add logic to the search box so the user can search both lists by typing in food values.
+ *      We need to support partial matches.
+ *
+ *   3) The list contains multiple entries for the same person. Restructure the data so that we
+ *      print each person once, with all of the food they have. For example:
+ *      "Apple, Apple, Banana, Yogurt in Michael's lunchbox" in the first list and
+ *      "Michael has Apple, Apple, Banana, Yogurt" in the second list.
+ *
+ *   4) Our users want the food to look fancy. For the first list, wrap each food item in a plus
+ *      so it looks like "+Apple+, +Apple+, +Banana+" and in the second list wrap each food item
+ *      in a minus so it looks like "-Apple-, -Apple-, -Banana-".
+ *
+ *      Bonus: How reusable can you make this logic?
+ */
+
+import React, { useState } from "react";
+import ReactDOM from "react-dom";
+
+const List = ({ items = {} }) => {
+  const pretty = (sign, item) => {
+    return sign+item+sign
+  }
+  return (
+
+    <>
+      <ul>
+        {Object.keys(items).map((item, i) => {
+          return (
+            <li key={item}>
+              {items[item].map(food =>{
+                return <span>{pretty('+',food)}, </span>
+              })}
+              in {item}'s lunchbox
+            </li>
+          );
+        })}
+      </ul>
+      <ul>
+      {Object.keys(items).map((item, i) => {
+          return (
+            <li key={item}>
+              <span>{item} has {items[item].map(item=> pretty("-",item)).join(", ")}</span>
+            </li>
+          );
+        })}
+      </ul>
+    </>
+  );
+};
+
+function App() {
+  let items = [
+    { food: "Apple", owner: "Michael", id: 0 },
+    { food: "Apple", owner: "Michael", id: 1 },
+    { food: "Banana", owner: "Michael", id: 2 },
+    { food: "Banana", owner: "Jin", id: 3 },
+    { food: "Banana", owner: "Alanna", id: 4 },
+    { food: "Egg", owner: "Seb", id: 5 },
+    { food: "Melon", owner: "Jin", id: 6 },
+    { food: "Melon", owner: "Seb", id: 7 },
+    { food: "Melon", owner: "Seb", id: 8 },
+    { food: "Orange", owner: "Amy", id: 9 },
+    { food: "Orange", owner: "Court", id: 10 },
+    { food: "Strawberry", owner: "Court", id: 11 },
+    { food: "Strawberry", owner: "Court", id: 12 },
+    { food: "Yogurt", owner: "Court", id: 13 },
+    { food: "Yogurt", owner: "Michael", id: 14 }
+  ];
+  const [list, setList] = useState(items);
+
+  const searchItems = (e) => {
+    console.log(e.target.value);
+    if (e.target.value === "") {
+      setList(items);
+    } else {
+      let query = e.target.value;
+      let partialItems = items.filter(
+        (item) => item.food.toLowerCase().indexOf(query.toLowerCase()) > -1
+      );
+      setList(partialItems);
+    }
+  };
+
+  const refactorData = (list) => {
+    let obj = {};
+    for (let index in list) {
+      let item = list[index];
+      if (!obj[item.owner]) {
+        obj[item.owner] = []
+      }
+      obj[item.owner].push(item.food)
+    }
+    return obj;
+  }
+  return (
+    <>
+      <input onChange={searchItems} />
+
+      <List items={refactorData(list)} />
+    </>
+  );
+}
+
+ReactDOM.render(<App />, document.getElementById("root"));
